@@ -12,19 +12,24 @@ local numAliveTextField
 local startButton
  
 local w = display.actualContentWidth
-local h = display.actualContentHeight 
+local h = display.actualContentHeight
+
+local function inputIsFilled() 
+    return rowsTextField.text ~= nil and rowsTextField.text ~= "" and
+    columnsTextField.text ~= nil and columnsTextField.text ~= "" and
+    numAliveTextField.text ~= nil and numAliveTextField.text ~= ""
+end
+
+local function inputIsValid()
+    return numAliveTextField < (rowsTextField.text * columnsTextField.text) / 2 and
+    rowsTextField.text < 200 and
+    columnsTextField.text < 100
+end
 
 local function handleButtonEvent( event )
     if (event.phase == "ended") then
         print(event.target.id .. " button pressed")
-        if (rowsTextField.text == nil or rowsTextField.text == "" or
-        columnsTextField.text == nil or columnsTextField.text == "" or
-        numAliveTextField.text == nil or numAliveTextField.text == "") then
-            print( "Must fill all fields" )
-            --infoClear()
-            --infoUpdate( "Must fill all fields" )
-            native.setKeyboardFocus( nil )
-        else 
+        if (inputIsFilled() and inputIsValid) then 
             -- START BUTTON FUNCTIONALITY
         end
     end
@@ -78,16 +83,19 @@ function scene:show( event )
         rowsTextField = native.newTextField(w/2, h/(numOfItems+1), w/1.4, h/20)
         rowsTextField.placeholder = "(# of rows)"
         rowsTextField.id = "rowsTextField"
+        rowsTextField.inputType = "number"
         rowsTextField:addEventListener( "userInput", inputListener )
 
         columnsTextField = native.newTextField(w/2, 2 * rowsTextField.y, w/1.4, h/20)
         columnsTextField.placeholder = "(# of columns)"
         columnsTextField.id = "columnsTextField"
+        columnsTextField.inputType = "number"
         columnsTextField:addEventListener( "userInput", inputListener )
 
         numAliveTextField = native.newTextField(w/2, 3 * rowsTextField.y, w/1.4, h/20)
         numAliveTextField.placeholder = "(# of alive)"
         numAliveTextField.id = "numAliveTextField"
+        numAliveTextField.inputType = "number"
         numAliveTextField:addEventListener( "userInput", inputListener )
 
         local startButton = widget.newButton({
