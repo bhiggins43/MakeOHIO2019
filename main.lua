@@ -7,7 +7,7 @@
 local composer = require( "composer" )
 local widget = require( "widget" )
 
-composer.gotoScene( " typeOfGame ")
+composer.gotoScene( "typeOfGame")
 
 -- local w = display.actualContentWidth
 -- local h = display.actualContentHeight

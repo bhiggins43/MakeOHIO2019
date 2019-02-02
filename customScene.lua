@@ -1,5 +1,5 @@
 local composer = require( "composer" )
- 
+local widget = require( "widget" )
 local scene = composer.newScene()
  
 -- -----------------------------------------------------------------------------------
@@ -11,6 +11,9 @@ local columnsTextField
 local numAliveTextField
 local startButton
  
+local w = display.actualContentWidth
+local h = display.actualContentHeight 
+
 local function handleButtonEvent( event )
     if (event.phase == "ended") then
         print(event.target.id .. " button pressed")
@@ -18,8 +21,8 @@ local function handleButtonEvent( event )
         columnsTextField.text == nil or columnsTextField.text == "" or
         numAliveTextField.text == nil or numAliveTextField.text == "") then
             print( "Must fill all fields" )
-            infoClear()
-            infoUpdate( "Must fill all fields" )
+            --infoClear()
+            --infoUpdate( "Must fill all fields" )
             native.setKeyboardFocus( nil )
         else 
             -- START BUTTON FUNCTIONALITY
@@ -28,22 +31,22 @@ local function handleButtonEvent( event )
 end
 
 local function inputListener( event )
-    infoClear()
+    --infoClear()
     if ("rowsTextField" == event.target.id) then
         if ("submitted" == event.phase or "ended" == event.phase) then
-            infoUpdate("rowsTextField submitted")
+            --infoUpdate("rowsTextField submitted")
             native.setKeyboardFocus( columnsTextField )
         end
     elseif ("columnsTextField" == event.target.id) then
         if ("submitted" == event.phase or "ended" == event.phase) then
-            infoUpdate("columnsTextField submitted")
+            --infoUpdate("columnsTextField submitted")
             native.setKeyboardFocus( numAliveTextField )
         end
     elseif ("numAliveTextField" == event.target.id) then
         if ("submitted" == event.phase or "ended" == event.phase) then
-            infoUpdate( "numAliveTextField submitted" )
+            --infoUpdate( "numAliveTextField submitted" )
             native.setKeyboardFocus( nil )
-            handleButtonEvent({phase="ended"})
+            handleButtonEvent({phase="ended", target={id="startButton"}})
         end
     end
 end
@@ -77,12 +80,12 @@ function scene:show( event )
         rowsTextField.id = "rowsTextField"
         rowsTextField:addEventListener( "userInput", inputListener )
 
-        columnsTextField = native.newTextField(w/2, 2 * numAliveTextField.y, w/1.4, h/20)
+        columnsTextField = native.newTextField(w/2, 2 * rowsTextField.y, w/1.4, h/20)
         columnsTextField.placeholder = "(# of columns)"
         columnsTextField.id = "columnsTextField"
         columnsTextField:addEventListener( "userInput", inputListener )
 
-        numAliveTextField = native.newTextField(w/2, 3 * numAliveTextField.y, w/1.4, h/20)
+        numAliveTextField = native.newTextField(w/2, 3 * rowsTextField.y, w/1.4, h/20)
         numAliveTextField.placeholder = "(# of alive)"
         numAliveTextField.id = "numAliveTextField"
         numAliveTextField:addEventListener( "userInput", inputListener )
