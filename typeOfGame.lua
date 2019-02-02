@@ -1,6 +1,6 @@
 local composer = require( "composer" )
 local widget = require( "widget" )
- 
+local colors = require( "colors" )
 local scene = composer.newScene()
  
 -- -----------------------------------------------------------------------------------
@@ -64,8 +64,8 @@ function scene:show( event )
             shape = "roundedRect",
             cornerRadius = (h/20) * 2 / 3,
             onEvent = handleButtonEvent,
-            fillColor = { default ={ 0, 0, 0}, over = {1, 0, 0}},
-            labelColor = { default = {1, 1, 1}, over = {1, 1, 1}}
+            fillColor = { default =colors.green, over = colors.lightgreen},
+            labelColor = { default = {0, 0, 0}, over = {0, 0, 0}}
         })
 
         local defaultButton = widget.newButton({
@@ -79,7 +79,7 @@ function scene:show( event )
             shape = "roundedRect",
             cornerRadius = (h/20) * 2 / 3,
             onEvent = handleButtonEvent,
-            fillColor = { default ={ 1, 1, 1}, over = {1, 0, 0}},
+            fillColor = { default =colors.blue, over = colors.lightblue},
             labelColor = { default = {0, 0, 0}, over = {0, 0, 0}}
         })
 
