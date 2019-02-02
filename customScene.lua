@@ -30,7 +30,13 @@ local function handleButtonEvent( event )
     if (event.phase == "ended") then
         print(event.target.id .. " button pressed")
         if (inputIsFilled() and inputIsValid) then 
-            -- START BUTTON FUNCTIONALITY
+            
+            composer.togoScene("lifeScene", {params = {
+                numRows = rowsTextField.text,
+                numCols = columnsTextField.text,
+                numAlive = numAliveTextField.text
+            }})
+
         end
     end
 end
