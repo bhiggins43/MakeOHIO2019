@@ -31,10 +31,11 @@ local function handleButtonEvent( event )
         print(event.target.id .. " button pressed")
         if (inputIsFilled() and inputIsValid) then 
             
-            composer.togoScene("lifeScene", {params = {
-                numRows = rowsTextField.text,
-                numCols = columnsTextField.text,
-                numAlive = numAliveTextField.text
+            composer.gotoScene("lifeScene", {params = {
+                numRows = tonumber(rowsTextField.text),
+                numCols = tonumber(columnsTextField.text),
+                numAlive = tonumber(numAliveTextField.text),
+                coordinates = nil
             }})
 
         end
@@ -46,17 +47,17 @@ local function inputListener( event )
     if ("rowsTextField" == event.target.id) then
         if ("submitted" == event.phase or "ended" == event.phase) then
             --infoUpdate("rowsTextField submitted")
-            native.setKeyboardFocus( columnsTextField )
+            -- native.setKeyboardFocus( columnsTextField )
         end
     elseif ("columnsTextField" == event.target.id) then
         if ("submitted" == event.phase or "ended" == event.phase) then
             --infoUpdate("columnsTextField submitted")
-            native.setKeyboardFocus( numAliveTextField )
+            -- native.setKeyboardFocus( numAliveTextField )
         end
     elseif ("numAliveTextField" == event.target.id) then
         if ("submitted" == event.phase or "ended" == event.phase) then
             --infoUpdate( "numAliveTextField submitted" )
-            native.setKeyboardFocus( nil )
+            -- native.setKeyboardFocus( nil )
             handleButtonEvent({phase="ended", target={id="startButton"}})
         end
     end
@@ -140,7 +141,9 @@ function scene:hide( event )
  
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
- 
+        rowsTextField:removeSelf()
+        columnsTextField:removeSelf()
+        numAliveTextField:removeSelf()
     end
 end
  

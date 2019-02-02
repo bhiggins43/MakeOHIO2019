@@ -32,7 +32,19 @@ function scene:show( event )
  
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-        lifeLogic.generateInitialStateCustom()
+        if (event.params.numAlive) then
+            lifeLogic.generateInitialStateCustom(
+                event.params.numRows,
+                event.params.numCols,
+                event.params.numAlive
+            )
+        else
+            lifeLogic.generateInitialStateDefault(
+                event.params.numRows,
+                event.params.numCols,
+                event.params.coordinates
+            )
+        end
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
