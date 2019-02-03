@@ -87,19 +87,18 @@ function scene:show( event )
         rows = event.params.numRows
         cols = event.params.numCols
         alive = event.params.numAlive
-        coords = event.params.coordinates
+        index = event.params.index
 
-        if (alive) then
+        if (not index) then
             lifeLogic.generateInitialStateCustom(
                 rows,
                 cols,
                 alive
             )
         else
+            print("Default Scene")
             lifeLogic.generateInitialStateDefault(
-                rows,
-                cols,
-                coords
+                index
             )
         end
 

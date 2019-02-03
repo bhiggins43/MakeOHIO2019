@@ -2,8 +2,9 @@ local json = require("json")
 
 local world = {}
 local previousWorld = {}
+local dis = require( "defaultInitialStates" )
 
-local rows, cols, alive
+local rows, cols, alive, rowArray, colArray
 local xShift = {-1, 0, 1, -1, 1, -1, 0, 1}
 local yShift = {1, 1, 1, 0, 0, -1, -1, -1}
 
@@ -19,6 +20,13 @@ local function assignRandomAlive()
         end
     end
 end
+
+local function assignDefaultAlive()
+    for i = 1, #rowArray, 1 do
+        world[rowArray[i]][colArray[i]] = 1
+    end
+end
+
 
 local function saveState()
     for i = 1, rows, 1 do
@@ -56,8 +64,19 @@ v.generateInitialStateCustom = function(numRows, numCols, numAlive)
     assignRandomAlive()
 end
 
-v.generateInitialStateDefault = function(numRows, numCols, coordinates)
-
+v.generateInitialStateDefault = function(index)
+    rows = dis[index].rows
+    cols = dis[index].cols
+    rowArray = dis[index].rowNum
+    colArray = dis[index].colNum
+    for i = 1, rows, 1 do
+        world[i] = {}
+        previousWorld = {}
+        for j = 1, numCols, 1 do
+            world[i][j] = 0
+        end
+    end
+    assignDefaultAlive()
 end
 
 v.generateNextState = function()
