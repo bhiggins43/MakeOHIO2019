@@ -40,7 +40,7 @@ v.blue = {0,191/255,255/255}
 v.lightblue = {0,165/255,255/255}
 
 v.green = {50/255,205/255,50/255}
-v.lightgreen = {40/255,225/255,40/255}
+v.lightgreen = {50/255,225/255,50/255}
 
 v.transitionColor = function( members )
     startColorTransition()

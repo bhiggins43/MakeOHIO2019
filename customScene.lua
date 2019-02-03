@@ -1,5 +1,7 @@
 local composer = require( "composer" )
 local widget = require( "widget" )
+local colors = require("colors")
+
 local scene = composer.newScene()
  
 -- -----------------------------------------------------------------------------------
@@ -85,7 +87,7 @@ function scene:show( event )
  
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-        local numOfItems = 4
+        local numOfItems = 7
 
         rowsTextField = native.newTextField(w/2, h/(numOfItems+1), w/1.4, h/20)
         rowsTextField.placeholder = "(# of rows)"
@@ -115,6 +117,8 @@ function scene:show( event )
             fontSize = rowsTextField.height,
             shape = "roundedRect",
             cornerRadius = rowsTextField.height * 2 / 3,
+            fillColor = { default = colors.green, over = colors.lightgreen},
+            labelColor = { default = {0, 0, 0}, over = {0, 0, 0}},
             onEvent = handleButtonEvent,
         })
 

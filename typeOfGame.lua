@@ -51,7 +51,7 @@ function scene:show( event )
 
         local numButtons = 2
         local buttonW = w * 0.8
-        local buttonH = h / (numButtons + 1)
+        local buttonH = h / (numButtons + 2)
 
         local customButton = widget.newButton({
             id = "customButton",

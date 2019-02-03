@@ -18,6 +18,15 @@ local intervalTimer
 local w = display.actualContentWidth
 local h = display.actualContentHeight
 
+local function handleButtonEvent( event )
+    if (event.phase == "ended") then
+        print(event.target.id .. " button pressed")
+        if (inputIsFilled() and inputIsValid) then 
+            composer.gotoScene("typeOfGame")
+        end
+    end
+end
+
 local function createMember(x, y)
     local memWidth = w / cols
     local memHeight = h / rows
