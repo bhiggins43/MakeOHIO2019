@@ -1,6 +1,7 @@
 local composer = require( "composer" )
 local lifeLogic = require( "lifeLogic" )
 local colors = require( "colors" )
+local json = require("json")
  
 local scene = composer.newScene()
  
@@ -29,11 +30,14 @@ local function createMember(x, y)
         memHeight - 2, 
         10 
     )
-    local c1 = math.random( 0, 255 ) / 255
-    local c2 = math.random( 0, 255 ) / 255
-    local c3 = math.random( 0, 255 ) / 255
-    -- tempMem:setFillColor(unpack(colors.green))
-    tempMem:setFillColor(c1, c2, c3)
+    -- local c1 = math.random( 0, 255 ) / 255
+    -- local c2 = math.random( 0, 255 ) / 255
+    -- local c3 = math.random( 0, 255 ) / 255
+    local r = colors.getCurrentColor().r
+    local g = colors.getCurrentColor().g
+    local b = colors.getCurrentColor().b
+    tempMem:setFillColor(r, g, b)
+    -- tempMem:setFillColor(c1, c2, c3)
 
     table.insert(members, tempMem)
 end
@@ -48,6 +52,7 @@ local function generateAliveMembers()
             end
         end
     end
+    -- colors.transitionColor()
 end
 
 local function destroyOldMembers()
@@ -64,6 +69,14 @@ local function timerListener( event )
     generateAliveMembers()
 end
  
+local function updateColor( event )
+    for k,v in pairs(members) do
+        local r = colors.getCurrentColor().r
+        local g = colors.getCurrentColor().g
+        local b = colors.getCurrentColor().b
+        v:setFillColor(r, g, b)
+    end
+end
  
  
 -- -----------------------------------------------------------------------------------
@@ -106,8 +119,9 @@ function scene:show( event )
         end
 
         generateAliveMembers()
-        lifeLogic.printState()
         intervalTimer = timer.performWithDelay( intervalDuration, timerListener, -1 )
+        colors.transitionColor()
+        Runtime:addEventListener( "enterFrame", updateColor )
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
@@ -128,6 +142,7 @@ function scene:hide( event )
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
         destroyOldMembers()
+        Runtime:removeEventListener( "enterFrame", updateColor )
 
     end
 end
