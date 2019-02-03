@@ -50,4 +50,8 @@ v.getCurrentColor = function()
     return color
 end
 
+v.cancelTransition = function()
+    transition.cancel()
+end
+
 return v

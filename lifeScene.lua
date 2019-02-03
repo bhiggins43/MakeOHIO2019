@@ -130,11 +130,13 @@ function scene:show( event )
         intervalTimer = timer.performWithDelay( intervalDuration, timerListener, -1 )
         colors.transitionColor()
         Runtime:addEventListener( "enterFrame", updateColor )
+
+        local quitButtonX = w * 0.05
  
         local quitButton = widget.newButton({
             id = "quitButton",
-            x = w * 0.05,
-            y = h * 0.95,
+            x = quitButtonX,
+            y = h -quitButtonX,
             radius = w/14,
             fontSize = 45,
             label = "X",
@@ -170,6 +172,7 @@ function scene:hide( event )
         destroyOldMembers()
         Runtime:removeEventListener( "enterFrame", updateColor )
         timer.cancel(intervalTimer)
+        colors.cancelTransition()
 
     end
 end
