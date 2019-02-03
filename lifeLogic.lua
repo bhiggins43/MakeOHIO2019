@@ -48,7 +48,7 @@ v.generateInitialStateCustom = function(numRows, numCols, numAlive)
     alive = numAlive
     for i = 1, numRows, 1 do
         world[i] = {}
-        previousWorld = {}
+        previousWorld[i] = {}
         for j = 1, numCols, 1 do
             world[i][j] = 0
         end
@@ -62,10 +62,10 @@ end
 
 v.generateNextState = function()
     saveState()
-    local numAliveNeighbors = 0
 
     for i = 1, rows, 1 do
         for j = 1, cols, 1 do
+            local numAliveNeighbors = 0
             for n = 1, 8, 1 do
 
                 local tempRow = i + xShift[n]
@@ -83,12 +83,24 @@ v.generateNextState = function()
                 end
 
                 numAliveNeighbors = numAliveNeighbors + previousWorld[tempRow][tempCol]
+                print(numAliveNeighbors)
 
             end
             -- Update cell
             updateWorldCell(i, j, numAliveNeighbors)
         end
     end
+end
+
+v.printState = function()
+    for k,v in pairs(world) do
+        local s = ""
+        for o,p in pairs(v) do
+            s = s .. " "..p
+        end
+        print(s)
+    end
+    print("-------------------------------")
 end
 
 v.getCurrentState = function()

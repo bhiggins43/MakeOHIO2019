@@ -10,45 +10,55 @@ local scene = composer.newScene()
 -- -----------------------------------------------------------------------------------
 local rows, cols, alive, coords
 local members = {}
+local intervalDuration = 500
+local intervalTimer
  
 local w = display.actualContentWidth
 local h = display.actualContentHeight
-print("Width = "..w)
-print("Height = "..h)
 
-local function createMember(x, y, count, sceneGroup)
+local function createMember(x, y)
     local memWidth = w / cols
     local memHeight = h / rows
-    local memX = (x - 1) * memWidth
-    local memY = (y - 1) * memHeight
+    local memX = (x - 1) * memWidth + 0.5 * memWidth
+    local memY = (y - 1) * memHeight + 0.5 * memHeight
 
-    members[count] = display.newRoundedRect( 
-        sceneGroup, 
+    local tempMem = display.newRoundedRect( 
         memX, 
         memY, 
-        memWidth, 
-        memHeight, 
+        memWidth - 2, 
+        memHeight - 2, 
         10 
     )
+    tempMem:setFillColor(unpack(colors.green))
 
-    members[count].anchorX = 0
-    members[count].anchorY = 0
-    members[count]:setFillColor(unpack(colors.green))
+    table.insert(members, tempMem)
 end
 
-local function generateAliveMembers( sceneGroup )
-    members = {}
+local function generateAliveMembers()
     local world = lifeLogic.getCurrentState()
     local count = 0
     for i = 1, rows, 1 do
         for j = 1, cols, 1 do
             if world[i][j] == 1 then
-                print("("..i..", "..j..")")
-                count = count + 1
-                createMember(j, i, count, sceneGroup)
+                createMember(j, i, sceneGroup)
             end
         end
     end
+end
+
+local function destroyOldMembers()
+    for k,v in pairs(members) do
+        v:removeSelf()
+        v = nil
+    end
+    members = {}
+end
+
+local function timerListener( event )
+    lifeLogic.generateNextState()
+    lifeLogic.printState()
+    -- destroyOldMembers()
+    -- generateAliveMembers()
 end
  
  
@@ -93,18 +103,9 @@ function scene:show( event )
             )
         end
 
-        generateAliveMembers( sceneGroup )
-
-        -- local bob = display.newRoundedRect( 
-        --     sceneGroup, 
-        --     0, 
-        --     0, 
-        --     w, 
-        --     h, 
-        --     10 
-        -- )
-        -- bob.anchorX = 0
-        -- bob.anchorY = 0
+        generateAliveMembers()
+        lifeLogic.printState()
+        intervalTimer = timer.performWithDelay( intervalDuration, timerListener, -1 )
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
@@ -124,7 +125,8 @@ function scene:hide( event )
  
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
- 
+        destroyOldMembers()
+
     end
 end
  
