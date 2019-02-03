@@ -86,6 +86,7 @@ function scene:show( event )
                 alive
             )
         else
+            print("Default Scene")
             lifeLogic.generateInitialStateDefault(
                 index
             )
