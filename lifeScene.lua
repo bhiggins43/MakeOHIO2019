@@ -1,6 +1,7 @@
 local composer = require( "composer" )
 local lifeLogic = require( "lifeLogic" )
 local colors = require( "colors" )
+local widget = require( "widget" )
  
 local scene = composer.newScene()
  
@@ -64,7 +65,14 @@ local function timerListener( event )
     generateAliveMembers()
 end
  
- 
+local function handleButtonEvent( event )
+    if (event.phase == "ended") then
+        print("First Condition")
+        if (event.target.id == "quitButton") then
+            composer.gotoScene("typeOfGame")            
+        end
+    end
+end
  
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -109,6 +117,24 @@ function scene:show( event )
         lifeLogic.printState()
         intervalTimer = timer.performWithDelay( intervalDuration, timerListener, -1 )
  
+        local quitButton = widget.newButton({
+            id = "quitButton",
+            x = w * 0.05,
+            y = h * 0.95,
+            radius = w/14,
+            fontSize = 45,
+            label = "X",
+            shape = "circle",
+            fillColor = { default = colors.green, over = colors.lightgreen },
+            labelColor = { default={ 0 }, over={ 0 } },
+            onEvent = handleButtonEvent,
+        })
+
+        quitButton.anchorX = 0
+        quitButton.anchorY = 1
+
+        sceneGroup:insert( quitButton )
+
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
  
@@ -128,6 +154,7 @@ function scene:hide( event )
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
         destroyOldMembers()
+        timer.cancel(intervalTimer)
 
     end
 end
