@@ -29,7 +29,11 @@ local function createMember(x, y)
         memHeight - 2, 
         10 
     )
-    tempMem:setFillColor(unpack(colors.green))
+    local c1 = math.random( 0, 255 ) / 255
+    local c2 = math.random( 0, 255 ) / 255
+    local c3 = math.random( 0, 255 ) / 255
+    -- tempMem:setFillColor(unpack(colors.green))
+    tempMem:setFillColor(c1, c2, c3)
 
     table.insert(members, tempMem)
 end
@@ -56,9 +60,8 @@ end
 
 local function timerListener( event )
     lifeLogic.generateNextState()
-    lifeLogic.printState()
-    -- destroyOldMembers()
-    -- generateAliveMembers()
+    destroyOldMembers()
+    generateAliveMembers()
 end
  
  

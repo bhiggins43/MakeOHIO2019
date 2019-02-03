@@ -38,12 +38,12 @@ end
 
 local function updateWorldCell(row, col, numAliveNeighbors)
     if world[row][col] == 1 then    -- Alive
-        if numAliveNeighbors < 2 and numAliveNeighbors > 3 then
+        if numAliveNeighbors < 2 or numAliveNeighbors > 3 then
             world[row][col] = 0
         end
     else                            -- Dead
         if numAliveNeighbors == 3 then
-            world[col][row] = 1
+            world[row][col] = 1
         end
     end
 end
@@ -102,7 +102,6 @@ v.generateNextState = function()
                 end
 
                 numAliveNeighbors = numAliveNeighbors + previousWorld[tempRow][tempCol]
-                print(numAliveNeighbors)
 
             end
             -- Update cell
