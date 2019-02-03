@@ -21,9 +21,7 @@ local h = display.actualContentHeight
 local function handleButtonEvent( event )
     if (event.phase == "ended") then
         print(event.target.id .. " button pressed")
-        if (inputIsFilled() and inputIsValid) then 
-            composer.gotoScene("typeOfGame")
-        end
+        composer.gotoScene("typeOfGame")
     end
 end
 
