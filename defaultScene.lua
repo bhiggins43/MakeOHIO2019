@@ -1,8 +1,7 @@
--- DOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOD
-
---File to create the scene for the ICE screen
+--File to create the scene for the default scene screen
 local composer = require( "composer" )
 local widget = require( "widget" )
+
 local scene = composer.newScene()
  
 -- -----------------------------------------------------------------------------------
@@ -13,12 +12,12 @@ local scene = composer.newScene()
  
 local w = display.actualContentWidth
 local h = display.actualContentHeight
-local contactTable
+local defaultOptionTable
+local previousSelectedIndex = -1
 
 local function onRowRenderListener( event )
     local row = event.row
     local params = row.params
-    print("I made it into onRowRenerListener")
     if ( event.row.params ) then
         row.nameText = display.newText( params.name, 18, 0, native.systemFont, 18)
         row.nameText.anchorX = 0
@@ -56,7 +55,7 @@ local function onRowTouchListener(event)
         end
 
         if ((previousSelectedIndex ~= row.index) and (previousSelectedIndex ~=-1)) then
-            local previousRow = contactTable:getRowAtIndex(previousSelectedIndex)
+            local previousRow = defaultOptionTable:getRowAtIndex(previousSelectedIndex)
             previousRow.nameText:setFillColor(0)
             previousRow.numberText:setFillColor(0)
             row.isSelected = false
@@ -65,9 +64,10 @@ local function onRowTouchListener(event)
     end
 end
 
-local function createContactTableRows( entries )
+local function createDefaultOptionTableRows(  )
+    -- pull from defaultInitialStates
     for number, name in pairs(entries) do
-        contactTable:insertRow{
+        defaultOptionTable:insertRow{
             rowHeight = h / 17,
             rowColor = { default={ 0.8, 0.8, 0.8 }, over={ 0.7, 0.7, 0.9 } },
             lineColor = { 69/255, 137/255, 247/255 },
@@ -79,38 +79,14 @@ local function createContactTableRows( entries )
     end
 end
 
-local function retrieveContacts()
-    gamesparks.getICEContacts(function(response)
-        createContactTableRows(response)
-    end)
-    
-end
-
-local function deleteAndRerenderTable( number )
-    gamesparks.deleteICEContact(number, function()
-        gamesparks.getICEContacts( function(response)
-            contactTable:deleteAllRows()
-            createContactTableRows(response)
-        end)
-    end)
-end
-
 local function handleButtonEvent( event )
     if (event.phase == "ended") then
         print("First Condition")
-        if (event.target.id == "addButton") then
-            print("Adding Contact")
-            composer.gotoScene("addContact")
-        elseif (event.target.id == "backButton") then
-            composer.gotoScene("home")
-        elseif (event.target.id == "deleteButton") then
-            if (previousSelectedIndex ~= -1 ) then
-                local row = contactTable:getRowAtIndex(previousSelectedIndex)
-                local number = row.numberText.text
-                deleteAndRerenderTable(number)
-            end
+        if (event.target.id == "continueButton") then
+            print("Hit continue")
+            local row = defaultOptionTable:getRowAtIndex(previousSelectedIndex)
+            --composer.gotoScene("Shit")
         end
-        print(event.target.id .. " button pressed")
     elseif (event.phase == "began") then
         event.target:setFillColor(0,0,1)
         print("begin")
@@ -158,7 +134,7 @@ function scene:show( event )
         topRect:setFillColor(0.4)
         sceneGroup:insert(topRect)
 
-        contactTable = widget.newTableView({
+        defaultOptionTable = widget.newTableView({
             x = display.contentCenterX,
             y = tableHeight * 0.5 + display.topStatusBarContentHeight,
             width = display.actualContentWidth,
@@ -166,21 +142,22 @@ function scene:show( event )
             isBounceEnabled = true,
             onRowRender = onRowRenderListener,
             backgroundColor = {0.4},
-            onRowTouch = onRowTouchListener
+            onRowTouch = onRowTouchListener,
+
             
         })
         local isCategory = false
 
-        local tableBottom = contactTable.y + 0.5 * contactTable.height
+        local tableBottom = defaultOptionTable.y + 0.5 * defaultOptionTable.height
         local buttonSpace = display.actualContentHeight - tableBottom
 
-        local addButton = widget.newButton({
-            id = "addButton",
+        local continueButton = widget.newButton({
+            id = "continueButton",
             x = w / 2,
             y = tableBottom + buttonSpace / 4,
             width = w/1.4,
             height = 2 * (h/20),
-            label = "Add ICE",
+            label = "Continue",
             fontSize = h/20,
             shape = "roundedRect",
             cornerRadius = (h/20) * 2 / 3,
@@ -189,42 +166,10 @@ function scene:show( event )
             onEvent = handleButtonEvent,
         })
 
-        local deleteButton = widget.newButton({
-            id = "deleteButton",
-            x = w / 2,
-            y = addButton.y + buttonSpace / 4,
-            width = w/1.4,
-            height = 2 * (h/20),
-            label = "Delete ICE",
-            fontSize = h/20,
-            shape = "roundedRect",
-            cornerRadius = (h/20) * 2 / 3,
-            fillColor = { default={ 0.96, 0.20, 0.20 }, over={ 1, 0.30, 0.30 } },
-            labelColor = { default={ 0 }, over={ 0 } },
-            onEvent = handleButtonEvent,
-        })
+        sceneGroup:insert( continueButton )
+        sceneGroup:insert( defaultOptionTable )
 
-        local backButton = widget.newButton({
-            id = "backButton",
-            x = w / 2,
-            y = deleteButton.y + buttonSpace / 4,
-            width = w/1.4,
-            height = 2 * (h/20),
-            label = "Back",
-            fontSize = h/20,
-            shape = "roundedRect",
-            cornerRadius = (h/20) * 2 / 3,
-            fillColor = { default={ 0.2, 0.55, 1 }, over={ 0.3, 0.65, 1 } },
-            labelColor = { default={ 0 }, over={ 0 } },
-            onEvent = handleButtonEvent,
-        })
-
-        sceneGroup:insert( addButton )
-        sceneGroup:insert( contactTable )
-        sceneGroup:insert( backButton )
-        sceneGroup:insert( deleteButton )
-
-        retrieveContacts()
+        createDefaultOptionTableRows()
     end
 end
  
