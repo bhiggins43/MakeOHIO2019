@@ -1,7 +1,8 @@
 --File to create the scene for the default scene screen
 local composer = require( "composer" )
 local widget = require( "widget" )
-
+local dis = require( "defaultInitialStates")
+local colors = require( "colors" )
 local scene = composer.newScene()
  
 -- -----------------------------------------------------------------------------------
@@ -14,6 +15,7 @@ local w = display.actualContentWidth
 local h = display.actualContentHeight
 local defaultOptionTable
 local previousSelectedIndex = -1
+print(dis[1].name)
 
 local function onRowRenderListener( event )
     local row = event.row
@@ -65,14 +67,13 @@ local function onRowTouchListener(event)
 end
 
 local function createDefaultOptionTableRows(  )
-    -- pull from defaultInitialStates
-    for number, name in pairs(entries) do
+    for number, config in pairs(dis) do
         defaultOptionTable:insertRow{
             rowHeight = h / 17,
             rowColor = { default={ 0.8, 0.8, 0.8 }, over={ 0.7, 0.7, 0.9 } },
             lineColor = { 69/255, 137/255, 247/255 },
             params = {
-               name = name,
+               name = config.name,
                number = number
             }
          }
@@ -84,11 +85,18 @@ local function handleButtonEvent( event )
         print("First Condition")
         if (event.target.id == "continueButton") then
             print("Hit continue")
+            print(previousSelectedIndex)
             local row = defaultOptionTable:getRowAtIndex(previousSelectedIndex)
-            --composer.gotoScene("Shit")
+            composer.gotoScene("lifeScene", {params = {
+                numRows = nil
+                numCols = nil
+                numAlive = nil
+                index = previousSelectedIndex
+            }})
+            
         end
     elseif (event.phase == "began") then
-        event.target:setFillColor(0,0,1)
+        --event.target:setFillColor(0,0,1)
         print("begin")
     end
 end
@@ -123,7 +131,7 @@ function scene:show( event )
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
-        local tableHeight = display.actualContentHeight * 0.5
+        local tableHeight = display.actualContentHeight * 0.75
 
         local topRect = display.newRect(
             display.contentCenterX,
@@ -155,13 +163,13 @@ function scene:show( event )
             id = "continueButton",
             x = w / 2,
             y = tableBottom + buttonSpace / 4,
-            width = w/1.4,
-            height = 2 * (h/20),
+            width = w,
+            height = h * 0.25,
             label = "Continue",
             fontSize = h/20,
-            shape = "roundedRect",
+            shape = "roundedRect", 
             cornerRadius = (h/20) * 2 / 3,
-            fillColor = { default={ 0.28, 0.85, 0.40 }, over={ 0.38, 0.95, 0.50 } },
+            fillColor = { default = colors.green, over = colors.lightgreen },
             labelColor = { default={ 0 }, over={ 0 } },
             onEvent = handleButtonEvent,
         })

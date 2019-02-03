@@ -35,7 +35,7 @@ local function handleButtonEvent( event )
                 numRows = tonumber(rowsTextField.text),
                 numCols = tonumber(columnsTextField.text),
                 numAlive = tonumber(numAliveTextField.text),
-                coordinates = nil
+                index = nil
             }})
 
         end
