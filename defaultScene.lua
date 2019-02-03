@@ -88,8 +88,8 @@ local function handleButtonEvent( event )
             print(previousSelectedIndex)
             local row = defaultOptionTable:getRowAtIndex(previousSelectedIndex)
             composer.gotoScene("lifeScene", {params = {
-                numRows = nil,
-                numCols = nil,
+                numRows = dis[previousSelectedIndex].rows,
+                numCols = dis[previousSelectedIndex].cols,
                 numAlive = nil,
                 index = previousSelectedIndex
             }})

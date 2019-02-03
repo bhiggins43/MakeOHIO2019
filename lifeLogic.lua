@@ -71,8 +71,8 @@ v.generateInitialStateDefault = function(index)
     colArray = dis[index].colNum
     for i = 1, rows, 1 do
         world[i] = {}
-        previousWorld = {}
-        for j = 1, numCols, 1 do
+        previousWorld[i] = {}
+        for j = 1, cols, 1 do
             world[i][j] = 0
         end
     end
