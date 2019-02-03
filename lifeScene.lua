@@ -2,6 +2,7 @@ local composer = require( "composer" )
 local lifeLogic = require( "lifeLogic" )
 local colors = require( "colors" )
 local json = require("json")
+local widget = require( "widget" )
  
 local scene = composer.newScene()
  
@@ -123,6 +124,24 @@ function scene:show( event )
         colors.transitionColor()
         Runtime:addEventListener( "enterFrame", updateColor )
  
+        local quitButton = widget.newButton({
+            id = "quitButton",
+            x = w * 0.05,
+            y = h * 0.95,
+            radius = w/14,
+            fontSize = 45,
+            label = "X",
+            shape = "circle",
+            fillColor = { default = colors.green, over = colors.lightgreen },
+            labelColor = { default={ 0 }, over={ 0 } },
+            onEvent = handleButtonEvent,
+        })
+
+        quitButton.anchorX = 0
+        quitButton.anchorY = 1
+
+        sceneGroup:insert( quitButton )
+
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
  
@@ -143,6 +162,7 @@ function scene:hide( event )
         -- Code here runs immediately after the scene goes entirely off screen
         destroyOldMembers()
         Runtime:removeEventListener( "enterFrame", updateColor )
+        timer.cancel(intervalTimer)
 
     end
 end
